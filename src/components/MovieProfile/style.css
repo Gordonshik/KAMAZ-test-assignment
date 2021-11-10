@@ -1,0 +1,12 @@
+.movie-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 10%;
+}
+
+.movie-box__button {
+    width: 50px;
+    margin-top: 10px;
+}

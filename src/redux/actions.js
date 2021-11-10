@@ -1,5 +1,4 @@
-import axios from "axios";
-import { getData } from '../api'
+import axios from "axios"
 
 export const ActionTypes = {
     ADD_MOVIES: "ADD_MOVIES",
@@ -19,31 +18,21 @@ export function changeId(id) {
     return {type: "CHANGE_ID", payload: id}
 }
 
-/*export const takeData = async() => async (dispatch) => {
-    debugger
+export const setData = word => async (dispatch) => {
     try {
-        debugger
-      const data = await getData(value)
-      const sortedArr = data.sort((a, b) => {
-        if (a.show.name < b.show.name) {
-          return -1;
-        }
-        if (a.show.name > b.show.name) {
-          return 1;
-        }
-        return 0;
-      })
-        return dispatch(addMovies(sortedArr));
+        const response = await axios
+        .get(`https://api.tvmaze.com/search/shows?q=${word}`)
+        .then(res => res.data.sort((a, b) => {
+            if (a.show.name < b.show.name) {
+              return -1;
+            }
+            if (a.show.name > b.show.name) {
+              return 1;
+            }
+            return 0;
+          }))
+        return dispatch(addMovies(response));
     } catch (error) {
         console.error(error)
     }
-};*/
-
-export const setData = () => async (dispatch) => {
-        try {
-            const response = await axios.get('https://reqres.in/api/users?per_page=12')
-            return dispatch(getData(response.data.data));
-        } catch (error) {
-            console.error(error)
-        }
-    };
+}

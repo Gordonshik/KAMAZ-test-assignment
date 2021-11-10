@@ -1,54 +1,30 @@
-import { useState } from 'react';
 import './App.css';
-import { Input } from 'antd'
-import { getData } from './api'
-import MovieCard from './components/MovieCard'
-import pinnedImg from './static/pinimg.jpg'
 import { Routes, Route } from 'react-router'
 import MovieProfile from './components/MovieProfile'
+import { connect } from 'react-redux'
 import Main from './components/Main'
 
-const App = () => {
-  const [searchingWord, setSearchingWord] = useState('')
-  const [moviesData, setMoviesData] = useState([])
-
-  const changeSearchingWord = async(value) => {
-      setSearchingWord(value)
-      const data = await getData(value)
-      const sortedArr = data.sort((a, b) => {
-        if (a.show.name < b.show.name) {
-          return -1;
-        }
-        if (a.show.name > b.show.name) {
-          return 1;
-        }
-        return 0;
-      })
-      setMoviesData(sortedArr)
-      console.log(moviesData)
-  }
-
-  const createMovieCard = arr => arr?.map(item => 
-    <MovieCard 
-    key={item.show.id}
-    cover={item.show.image?.medium ? item.show.image.medium : pinnedImg}
-    name={item.show.name}
-    score={`${item.score.toFixed(2) * 100} из 100`}  
-    link={item.show.id}/>
-  )
-
-  const movieCards = createMovieCard(moviesData)
+const App = ({...props}) => {
+  const { movies } = props
 
   return <>
-      <Routes>MovieProfile
+      <Routes>
         <Route path="/" element={<Main />}/>
-        {moviesData.map(item => 
+        {movies.map(item => 
         <Route 
         path={`/movie/${item.show.id}`} 
-        element={<MovieProfile props={item}/>}/>
+        element={<MovieProfile movies={movies} currentId={item.show.id}/>}/>
         )}
       </Routes>
   </>
 }
 
-export default App;
+function mapStateToProps(store) {
+  return {
+      movies: store.users.movies,
+      word: store.users.word,
+      id: store.users.id,
+  };
+}
+
+export default connect(mapStateToProps)(App)

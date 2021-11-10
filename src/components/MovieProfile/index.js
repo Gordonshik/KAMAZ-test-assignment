@@ -1,40 +1,55 @@
-import { useEffect } from 'react'
+import { changeId } from "../../redux/actions"
 import { Image } from 'antd'
 import { connect } from 'react-redux'
 import store from '../../redux/store'
+import { Link } from 'react-router-dom'
+import additionalImg from '../../static/pinimg.jpg'
+import './style.css'
 
 function MovieProfile({...props}) {
-    const { image, name, description, language, date, genres, link, movies, word } = props
-    console.log(props)
+    const { movies, currentId } = props
 
-    const moviesArr = store.getState().users.movies
-    const currentId = store.getState().users.movies
+    const currentMovie = id => {    
+        if(id && movies[0]){
+            return movies.find(movie => movie.show.id === id).show
+        }
+    }
 
-    const currentMovie = id => movies.find(movie => movie.show.id === id)
-    useEffect(() => {
-        
-        currentMovie(currentId)
-    })
+    const currentMovieInfo = currentMovie(currentId)
+    
+    const movieImg = currentMovieInfo?.image?.medium ? currentMovieInfo?.image?.medium : additionalImg
+console.log(currentMovieInfo)
     return (
-        <div>
-            <Image src={image}/>
-            <p>Name: ${name} dasd</p>
-            <p>description: ${description}</p>
-            <p>Lang: {language}</p>
-            <p>Date: {date}</p>
-            <p>Genres: {genres}</p>
-            <a src={link}>Official Link</a>
+        <div className='movie-box'>
+            <Image 
+            src={movieImg}
+            style={{
+                width: 200,
+                height: 250,
+            }}
+            preview={false}/>
+            <p>Name: {currentMovieInfo?.name}</p>
+            {currentMovieInfo?.summury}
+            <p>Lang: {currentMovieInfo?.language}</p>
+            <p>Date: {currentMovieInfo?.premiered}</p>
+            <p>Genres: {currentMovieInfo?.genres}</p>
+            <a href={currentMovieInfo?.url}>Official Link</a>
+            <button className='movie-box__button'>
+                <Link to='/'>
+                    Назад
+                </Link>
+
+            </button>
         </div>
     )
-}
+}  
 
-
-function mapStateToProps(store) {
-    
+function mapDispatchToProps(dispatch) {
     return {
-        movies: store.movies,
-        word: store.word
-    };
+      changeId: id => {
+        store.dispatch(changeId(id))
+      }
+    }
   }
 
-export default connect(mapStateToProps)(MovieProfile)
+export default connect(mapDispatchToProps)(MovieProfile)
