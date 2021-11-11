@@ -4,3 +4,9 @@
    height: 100%;
    width: 90%;
 }
+
+.ant-card {
+   display: flex;
+   align-items: center;
+   flex-direction: column;
+}
