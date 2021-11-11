@@ -53,10 +53,6 @@ const Main = ({...props}) => {
 
   const currentMoviesPage = getCurrentPageData()
 
-  const currentPageData = getCurrentPageData()
-
-  const movieCards = createMovieCard(movies)
-
   const changePage = page => {
     console.log(page)
     setCurrentPage(page)
